@@ -5,7 +5,7 @@ module OmniAuth
     class GoogleOauth2 < OmniAuth::Strategies::OAuth2
 
       # Possible scopes: userinfo.email,userinfo.profile,plus.me
-      DEFAULT_SCOPE = "userinfo.email,userinfo.profile"
+      DEFAULT_SCOPE = "userinfo.email,userinfo.profile,plus.me"
 
       option :name, 'google'
       option :authorize_options, [:scope, :approval_prompt, :access_type, :state, :hd]
