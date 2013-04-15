@@ -46,9 +46,9 @@ describe OmniAuth::Strategies::GoogleOauth2 do
   end
 
   describe '#authorize_params' do
-    %w(approval_prompt access_type state hd).each do |k|
+    %w(approval_prompt access_type state hd any_other).each do |k|
       it "should set the #{k} authorize option dynamically in the request" do
-        @options = {k.to_sym => ''}
+        @options = {:authorize_options => [k.to_sym], k.to_sym => ''}
         subject.stub(:request) { double('Request', {:params => { k => 'something' }, :env => {}}) }
         subject.authorize_params[k].should eq('something')
       end
@@ -139,4 +139,17 @@ describe OmniAuth::Strategies::GoogleOauth2 do
       subject.extra.should_not have_key(:raw_info)
     end
   end
+
+  describe 'populate auth hash url' do
+    it 'should populate url map in auth hash if link present in raw_info' do
+      subject.stub(:raw_info) { { 'name' => 'Foo', 'link' => 'https://plus.google.com/123456' } }
+      subject.info[:urls]['Google'].should eq('https://plus.google.com/123456')
+    end
+
+    it 'should not populate url map in auth hash if no link present in raw_info' do
+      subject.stub(:raw_info) { { 'name' => 'Foo' } }
+      subject.info.should_not have_key(:urls)
+    end
+  end
+
 end
